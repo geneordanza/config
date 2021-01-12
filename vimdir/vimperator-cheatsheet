@@ -1,0 +1,155 @@
+
+                                   Vimperator
+                                   ==========
+
+Opening web pages
+Navigating Web Sites
+Working With Document
+Working With Marks
+Tab Movement
+Miscellaneous Commands
+
+Shortcuts
+---------
+   gh    Hacker News
+   gob   BPI Express Online Banking
+   gof   Fedora Project
+   gog   Gmail Account
+   goi   Inquirer Newspaper
+   gok   Kernel Newbies
+   gol   LinuxToday
+   gon   News Google
+   gop   Philippine Star Newspaper
+   gor   Running Reddit
+
+   NOTE: To display all Quickmarks, press :qmarks
+
+Opening web pages
+-----------------
+
+   Open one or more URLs in the current tab:
+   Press 'o' - Shortcut for open
+      :o linux tutorial - Search Google for "linux tutorial"
+      :o /etc/fstab - Open local file
+      :o reddit.com, linuxtoday.com, osnews.com - open multiple URLs
+
+   Press 't' - Shortcut for tabopen, similar function to 'open' but uses new
+   tab.
+
+   Press 'T' - Show 't' prompt containing the current URL.  Useful if you wish
+   to go somewhere by editing the URL of the current page.
+
+   Press 'O' - Similar to 'T' but uses the current window.
+
+   Press 'w' - Similar to 'o' but opens web page in new window.
+
+   Press 'y' - Copy current URL.
+   Press 'p' - Paste URL based on the current clipboard content.
+
+
+Navigating Web Sites
+--------------------
+   Press 'L' or 'CTRL-o' - Go back one page in browser history.
+      :ba - Similar to pressing 'ctrl-o'
+      :ba! - Go back to the beginning of the browser history
+      :[count]ba - Go back nth pages.
+
+   Press 'H' or 'CTRL-i' - Go forward one page in browser history.
+      :fo - Similar to pressing 'CTRL-i'.
+      :fo! - Go forward to the latest web page
+      :[count]fo - Go forward to nth page.
+
+   :ju - Show the tab's session history.  Useful for :ba and :fo
+
+   Press 'gh' - Opens homepage in current tab.
+   Press 'gH' - Opens homepage in new tab.
+   Press 'gu' - Go to parent directory.
+   Press 'gU' - Go to root directory.
+
+   Press 'r' - Force reloading of the current web page
+   Press 'R' - Force reloading but skip cache
+
+   Press 'Ctrl-c' - Stop loading the current page
+
+   :sav [file] - Save current page to disk.  If [file] is omitted, use page's
+      default filename.
+
+   :winc - Close all other tab except current window.
+   :q - Quit current tab.
+   :qa - Quit all open tab and don't save sessions.
+   :xa - Save all sessions and quit.
+
+   Press 'f' - Show hints and allows you to follow links on pages by typing it's
+         unique integer number.
+   Press 'F' - Same as 'f' but open link in new tab.
+
+
+Working With Document
+---------------------
+
+   Press '0' - Scroll to the absolute left of the document.
+   Press '$' - Scroll to the absolute right of the document.
+   Press 'gg' - Go to top of the page.
+   Press 'G' - Go to the end of the page.
+   Press '[count]%' - Scroll to percent of the document.
+   Press '[count] h j k l' - Cursor movement
+   Press 'Ctrl-b' - Scroll up full page.
+   Press 'Ctrl-u' - Scroll down full page.
+   Press '<Tab>' - Keyboard focus to the next element.
+   Press '<S-Tab>' - Rewind keyboard focus.
+   Press '[count]gi' - Focus last used input field.
+   Press ']]' - Follow the link labeled 'next' or '>'.
+   Press '[[' - Follow the link labeled 'back' or '<'.
+
+   Press 'zi' - Enlarge text of current page: zoom in.
+   Press 'zo' - Reduce text of current page: zoom out.
+
+   Press 'y' - Yank current URL.
+   Press 'Y' - Copy current selected text.
+   Press 'p' - Paste text on the clipboard.
+
+Working With Marks
+------------------
+
+   Press 'M<a-z,A-Z,0-9>' - Mark URL (bookmarks or quick marks)
+   Press 'a' - Add a bookmark, using default title
+   Press 'A' - Toggle on/off bookmark
+      :bma -t='custom title' -keyword=kw url
+
+
+Tab Movement
+------------
+
+   Press 'B' - Show all opened tab (buffer list).
+   Press '[count]b' - Goto specified buffer from the buffer list.
+   Press 'g0' - Goto the first tab.
+   Press 'g$' - Goto the last tab.
+   Press 'Ctrl-n' - Goto the next tab. Cycle to the first tab when at last tab.
+   Press 'gt' - Goto the next tab.
+   Press 'gT' - Goto the previous tab.
+   Press 'd' - Close current tab.
+
+   :tabo - Close all other tab except current one.
+   :undoa[ll] - Undo closing of all closed tab (up to 10 closed tab).
+
+   Press '<Ctrl-^>' - Toggle to previously selected tab.
+
+Miscellaneous Commands
+----------------------
+
+   Show Firefox toolbar (by default, tool is disabled)
+      :set guioptions=mT
+
+
+   Disable Firefox toolbar manually
+      :set guioptions=
+
+   Show all the standard GUI button:
+      :set go+=mTB
+      :set go=
+
+   Press 'Ctrl-z' - To set pass-through mode (for using Gmail shortcut)
+   Press 'Esc' key - To back to normal mode
+
+   Press ':cd [path]' - Change current directory
+   Press ':pwd' - Print current directory.

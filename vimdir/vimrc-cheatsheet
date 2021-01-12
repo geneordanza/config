@@ -1,0 +1,889 @@
+
+                                   VIM Notes
+                 =============================================
+
+                             [ Table Of Contents ]
+
+ • Structure of Vim Navigation
+ • Vim Modes
+ • Basic Vim Cursor Movement
+ • Basic Vim Commands
+ • Opening and Saving Files
+ • Working with Multiple Files
+ • Advanced Vim Navigation
+ • Editing Commands
+ • Text Objects
+ • Visual Selection of Text
+ • Mark Selection of Text
+ • Formatting Tips
+ • Text Folding
+ • String Search
+ • String Substitution
+ • Tab Windows
+ • Split Windows (Viewport)
+ • Mappings
+ • Running Linux Commands
+ • Miscellaneous Stuff
+ • Macro Application
+ • VimScript Programming Language
+
+================================================================================
+
+- Spell Checking and Dictionary
+- GUI mode
+- Compound Searches
+- Cookbook Scripts
+- C Programming
+- Additional Info
+
+
+================================================================================
+
+                         • Structure of Vim Navigation
+
+" In Vim, editing commands have the following structure:
+"
+"   <number><command><text object or motion>
+"
+" The number is used to perform the command over multiple text objects or
+" motions, e.g., backward three words, forward two paragraphs. The number is
+" optional and can appear either before or after the command. The command is
+" an operation, e.g., change, delete (cut), or yank (copy). The command is
+" also optional; but without it, you only have a motion command, not an edit
+" command The text object or motion can either be a text construct, e.g., a
+" word, a sentence, a paragraph, or a motion, e.g., forward a line, back one
+" page, end of the line. An editing command is a command plus a text object or
+" motion, e.g., delete this word, change the next sentence, copy this
+" paragraph.
+"
+" ~~~
+"
+" Arguably the most brilliant thing about vim is that as you use it you begin to
+" think in it. vim is set up to function like a language, complete with nouns,
+" verbs, and adverbs.
+"
+" Verbs
+" Verbs are the actions we take, and they can be performed on nouns. Here are
+" some examples:
+"
+" d: delete
+" c: change
+" y: yank (copy)
+" v: visually select (V for line vs. character)
+"
+" Modifiers
+" Modifiers are used before nouns to describe the way in which you're going to
+" do something. Some examples:
+"
+" i: inside
+" a: around
+" NUM: number (e.g.: 1, 2, 10)
+" t: searches for something and stops before it
+" f: searches for that thing and lands on it
+" /: find a string (literal or regex)
+"
+" Nouns
+" In English, nouns are objects you do something to. They are objects. With vim
+" it's the same. Here are some vim nouns:
+"
+" w: word
+" s: sentence
+" ): sentence (another way of doing it)
+" p: paragraph
+" }: paragraph (another way of doing it)
+" t: tag (think HTML/XML)
+" b: block (think programming)
+"
+" Nouns as motion
+" You can also use nouns as motions, meaning you can move around your content
+" using them as the size of your jump. We'll see examples of this below in the
+" moving section.
+"
+" Building sentences (commands) using this language
+" Ok, so we have the various pieces, so how would you build a sentence using
+" them? Well, just like English, you combine the verbs, modifiers, and nouns in
+" (soon to be) intuitive ways.
+"
+" Here's what it looks like:
+"
+" d2w  Delete two words
+" cis  Change inside sentence (delete the current one and enter insert mode)
+" yip  Yank inside paragraph (copy the paragraph you're in)
+" ct<  Change to open bracket (change the text from where you are to the next open
+"      bracket)
+"
+" Remember, the "to" here was an open bracket, but it could have been anything.
+" And the syntax for "to" was simply t, so I could have said dt. or yt; for
+" "delete to the next period", or "copy to the next semicolon".
+"
+
+                                  • Vim Modes
+                                  -----------
+
+"   One of Vim’s unique feature is its modality. Most editors have one
+"   mode (insert), where Vim has 6 modes (normal, visual, insert, command-line,
+"   select, and ex). The 3 important ones are normal, insert, and visual.
+"
+"   Normal mode is Vim’s default mode. It can be used for navigating inside
+"   a file.
+"
+"   Insert Mode.
+"   This is the second most used mode, and will be the most familiar behavior to
+"   most people. Once in insert mode, typing inserts characters just like a
+"   regular text editor.
+"
+"   Visual Mode
+"   Visual mode is used to make selections of text, similar to how clicking and
+"   dragging with a mouse behaves. Selecting text allows commands to apply only
+"   to the selection, such as copying, deleting, replacing, and so on.
+"
+"   Command Mode
+"   Command mode has a wide variety of commands and can do things that normal
+"   mode can’t do as easily. To enter command mode type ’:’ from normal mode and
+"   then type your command which should appear at the bottom of the window.
+"
+"   Ex Mode
+"   Ex Mode is a mode where you drop down to the bottom, where you get a ":"
+"   prompt, and you can enter commands. More on that later. Just know that you
+"   can run some powerful command-line stuff from there.
+"
+
+
+                   • Basic Vim Cursor Movement (Normal mode)
+                   -----------------------------------------
+
+" h   Move cursor left
+" l   Move cursor right
+" k   Move cursor up
+" j   Move cursor down
+" 0   Move cursor to the beginning of line
+" $   Move cursor to the end of line
+" w   Move forward to next word
+" 3w  Move forward by 3 words
+" e   Move to end of a word
+" b   Move backward to previous word
+" 3b  Move backward by 3 words
+" A   Move cursor to end of line and put in insert mode
+" I   Move cursor to beginning of line and put in insert mode
+" H   Move cursor to top of the screen
+" L   Move cursor to bottom of the screen
+" M   Move cursor to middle of the screen
+" G   Move cursor to end of the file
+" gg  Move cursor to beginning of the file
+
+
+                              • Basic Vim Commands
+                              --------------------
+
+" <Esc> Enter normal mode
+" i     Enter insert mode
+" a     Enter append mode
+" yw    Copy a word
+" yy    Copy a line (saved for pasting)
+" x     Delete a character
+" dd    Delete a line (saved for pasting)
+" D     Delete text after current cursor position (saved for pasting)
+" p     Paste text that was copied/deleted
+" u     Undo
+
+
+                           • Opening and Saving Files
+                           --------------------------
+
+" vi index.js           Open new file name index.js
+" vi f1 f2 Nth          To open multiple files
+" vi +/root file        Find 'root' pattern when opening file
+" vi -c '/root' file    Find 'root' pattern when opening file
+" vi +10 file           Go to line 10 when opening file
+" vi -c "set nu" file   Set line number when opening file
+" vi -c "tab ball" f1 f2 Open multiple files in tab format
+" ls -l | vi -          Take output of command and send it vim session
+" vi -c 'args *.js'     Open all files with .js extension
+" vi -c 'args **/*.js'  Recursively open all files with .js extension
+" man ls | ul -i | vi - Redirect man page to vim
+
+" :e .       To open directory manager/explorer
+" :e <file>  To open and start editing a new file
+" :r <file>  To read the contents of a file and put it below current line
+" :w <file>  To save current file in another name
+" :edit!     To reload current file
+" :saveas <file> To save current file in another name
+" :w >> <file>   To append content of current file to another file
+" :1,7w <file>   To write the contents between line 1 and line 7 to a new file
+" :'<,'>w >> <file> To append specific line, highlight the line in visual mode
+
+                         • Working with Multiple Files
+                         -----------------------------
+
+" :e file To open another file inside Vim
+" gf     To load file under the cursor
+" :ls    To show all files currently open in buffer list
+" :b N   To load Nth file in buffer list
+" :bd N  To unload Nth file in buffer (buffer delete)
+" :bp    To load previous file in the buffer list (buffer previous)
+" :bn    To load next file in the buffer list (buffer next)
+" ctrl-H To load previous file in the buffer list (buffer previous)
+" ctrl-L To load next file in the buffer list (buffer next)
+" :wn    To save current buffr and move to next file
+" :first To load first file in buffer list
+" :last  To move to last file
+" :tab ball             Convert buffer list into tab form
+" :argdo %s/foo/bar/e   Operate on all files in buffer list
+" :tabdo %s/foo/bar/gc  To execute a command on all open tab files
+
+
+                           • Advanced Vim Navigation
+                           -------------------------
+
+" )    Move cursor to the next sentence
+" (    Move cursor to the beginning of the sentence
+" }    Move cursor to the end of paragraph
+" {    Move cursor to the beginning of paragraph
+" 5w   Move cursor 5 words forward
+" 3b   Move cursor 3 words backward
+" 3fh  Move cursor to the 3rd occurrence of letter 'h'
+" 8k   Move cursor 8 lines up
+" 5j   Move cursor 5 lines down
+" 4l   Move cursor 4 chars to the right
+" 23h  Move cursor 23 chars to the left
+" gm   Move the cursor to middle of the line
+"      gm was remap using :nnoremap gm :call cursor(0, len(getline('.'))/2)<cr>
+" z<enter> Make this line the top one on the screen
+" zz   Move the current line to the center of the window
+" %    Move to closing parenthesis -- first, place cursor at opening parenthesis
+" *    Move to next occurance of the word -- place cursor at first word
+" #    Move to previous occurance of word -- place cursor at first word
+" N%   Move to Nth percentage line of the file
+" Ctrl-g  Check the Nth percentage your cursor is currently in
+" `"   Move to were you were in NORMAL MODE while closing the last file
+" `^   Move to were you were in INSERT MODE while closing the last file
+" g;   Move to previous position of cursor in change list
+" g,   Move to next position of cursor in change list
+"      (:help changelist) for more info
+" Ctrl-o    Move the cursor to the previous location
+" Ctrl-F    Move the cursor forward by one screen
+" Ctrl-B    Move the cursor backward by one screen
+" Ctrl-E    Scroll window 1 line downward
+" Ctrl-Y    Scroll window 1 line upward
+
+
+                               • Editing Commands
+                               ------------------
+
+" A    Move cursor to end of line and put in insert mode
+" I    Move cursor to beginning of line and put in insert mode
+" a    Move cursor to next character and go into insert mode
+" i    Go into insert mode where current cursor is
+" y2w  Copy 2 words
+" 2yy  Copy 2 lines
+" p    Paste text that was copied/deleted (unnamed buffer)
+" "aY  Copy whole line into buffer 'a'
+" "ap  Paste text stored in buffer 'a'
+" "a3yy Copy 3 lines to 'a' named buffer
+" J    Merge two lines
+" r    Replace single character
+" cw   Replace a single word
+" C    Replace all stuff from cursor to end of line
+" x    Delete single character
+" dw   Delete single word
+" dawwP  Swap two words, place cursor the first word
+" dW   Delete word, including punctuations
+" dd   Delete current line
+" dgg  Delete current line to the top of file
+" D    Delete all stuff from cursor to end of line
+" dG   Delete all stuff from cursor to end of file
+" :%d  Delete everything in the file
+" xp   Swap two characters, place cursor at the first letter
+" ddp  Swap two lines
+" Ctrl-w  Delete last word while in insert mode
+" Ctrl-u  Delete entire line while in insert mode
+" u    Undo most recent change
+" U    Undo all changes to the current line
+" Ctrl-r Revert back to previous state
+" :<n1>,<n2> d        Delete the specified lines
+" :<n1>,<n2> mo <n3>  Move range n1,n2 to num3
+" :<n1>,<n2> co <n3>  Copy range n1,n2 to num3
+" :g/match/y A        Copy lines containing 'match' into "a/@a register
+"                     The capitalization A makes vi append yanking instead of
+"                     replacing the previous register contents
+
+
+                                 • Text Objects
+                                 --------------
+
+" To edit efficiently in Vim, you have to edit beyond individual characters.
+" Instead, edit by word, sentence, and paragraph. In Vim, these higher-level
+" contexts are called text objects. Vim provides text objects for both
+" plaintext and common programming language constructs. You can also define new
+" text objects using Vim script.
+"
+" In Vim, editing commands have the following structure:
+"   <number><command><text object or motion>
+"
+" The number is used to perform the command over multiple text objects or
+" motions, e.g., backward three words, forward two paragraphs. The number is
+" optional and can appear either before or after the command. The command is an
+" operation, e.g., change, delete (cut), or yank (copy). The command is also
+" optional; but without it, you only have a motion command, not an edit command
+" The text object or motion can either be a text construct, e.g., a word, a
+" sentence, a paragraph, or a motion, e.g., forward a line, back one page, end
+" of the line. An editing command is a command plus a text object or motion,
+" e.g., delete this word, change the next sentence, copy this paragraph.
+
+
+" aw  around word (includes surrounding white space and punctuations)
+" iw  inner word (does not include surrounding white space)
+" %   find next paired item in current line ([{}])
+
+" Text object beginning with 'a' include the surrounding white space in the text
+" object, those starting with 'i' do not. This convention is followed by all
+" text objects. The motion 'w' may seem similar to the text object 'aw'. The
+" difference is in the allowed cursor position. For example, to delete a word
+" using dw the cursor must be at the start of the word, any other position
+" would delete only part of the word; however, daw allows the cursor to be at
+" any position in the word.
+
+" A command using a motion, e.g., cw, operates from the current cursor position.
+" A command using a text-object, e.g., ciw operates on the whole object
+" regardless of the cursor position. We saw this behavior in each of the various
+" plaintext text objects. Although this requires one more character, it saves
+" you the time and effort of moving the cursor into the “right” position.
+
+" as  around sentence
+" is  inner sentence
+" ap  around paragraph
+" ip  inner paragraph
+" a)  around parenthesized block
+" i)  inner parenthesized block
+" a]  around bracketed block
+" i]  inner bracketed block
+" a”  around double quoted string
+" i”  inner double quoted string
+" a’  around single quoted string
+" i’  inner single quoted string
+" a`  around back quoted string
+" i`  inner back quoted string
+" at  tag block
+" it  inner tag block
+"
+" daw  Delete a word; cursor anywhere within a word
+" dW   Delete a word including punctution; cursor at beginning of word
+" cas  Change a sentence; cursor anywhere in sentence
+" dap  Delete paragraph
+" )    Move cursor to the end of the sentence
+" (    Move cursor to the beginning of the sentence
+" 3)   Move cursor 3 sentences forward
+" 3(   Move cursor 3 sentences backward
+" }    Move cursor to the end of the paragraph
+" {    Move cursor to previous paragraph
+" ci'  Change text inside '' and go to insert mode
+" ci"  Change text inside "" and go to insert mode
+" ci(  Change text inside () and go to insert mode
+" ci[  Change text inside [] and go to insert mode
+" ci{  Change text inside {} and go to insert mode
+" ci>  Change text inside <> and go to insert mode (HTML Tag)
+" cit  Change text inside HTML block (element children)
+" d)   Delete to the next period
+" das. Delete to the next period
+" dt.  Delete to the next period
+" da[  Delete text around [] including []
+" di[  Delete text inside <>
+" diw  Delete the current word
+" di(  Delete within current parens
+" di"  Delete text between quotes
+" ya(  Copy all text around parenthesis (including the parenthesis)
+" yt;  Copy to the next semicolon
+" y%   Copy text including paired items ([{}])
+" d%   Delete text including paired items ([{}])
+" v%   Visualize text including paired items ([{}])
+" f<   Move cursor to character '<'
+" t<   Move cursor to right before character '<'
+" ct<  Change text right before character '<'
+" dt<  Delete text right before character '<'
+
+
+                           • Visual Selection of Text
+                           --------------------------
+
+" v    Visually select text/word (use motion keys to select next text)
+" V    Visually select the whole line
+" Ctrl-v  Use Select block of text vertically
+" va"  Visually select text around "
+" vi"  Visually select text inside "
+" va'  Visually select text around '
+" vi'  Visually select text inside '
+" va(  Visually select text around parenthesis
+" vi(  Visually select text inside parenthesis
+" va{  Visually select text around bracket
+" vi{  Visually select text inside bracket
+" v%   Visually select text around ([{}])
+" vt.  Visually select text before the period
+" vt(  Visually select text before the parenthesis
+" To select text between parenthesis if you are already inside the
+"     parenthesis, press 'vib'
+
+
+                            • Mark Selection of Text
+                            ------------------------
+
+" ma  Mark a specific line in file with letter 'a'
+" 'a  Move to line with mark 'a' (default is ` instead of ')
+" '.  Move to last position a change was made
+" ''  Move to back to last location of the cursor after you use motion keys
+" '0  Move the cursor to last position it was when you closed the a file
+" :marks abc   Display lines set for mark 'a', 'b', 'c', etc
+" :marks       Display global marks
+" :'a,'b d     Delete line from mark 'a to 'b
+" :'a,'b co 2  Copy line from mark 'a to 'b to line 2
+" :'a,'b mo 2  Move line from mark 'a to 'b to line 2
+" :'a,'b w fz  Write line from mark 'a to 'b to file fz
+" :'a,'b d     Delete lines between 'a to 'b
+" :'a,'b s/old/new/gc   Replace 'old' with 'new' around line 22 to 55
+
+
+                               • Formatting Tips
+                               -----------------
+
+" :. center    Center the line where cursor is position
+" :1,4 center  Center lines from 1 to 4
+" :1,4 right   Right align lines from 1 to 4
+" Vu           Highlight a line and convert it to all lowercase
+" VU           Highlight a line and convert it to all uppercase
+" Ctrl+T       To indent while in insert mode
+" Ctrl+D       To un-indent while in insert mode
+" g~~          To invert case (similar to above)
+" :set sw=4    To define 4 spaces as indent size
+" ==           Auto-correct indention of current line based on line above
+" ={movement}  Auto-indent code. Place cursor on ( or { and press =( or ={
+
+
+                                 • Text Folding
+                                 --------------
+
+" :5,10 fold   Fold text in line 5,10 (alternatively, use visual to select text)
+" zfa{         Fold text around {}
+" zfap         Fold text around paragraph
+" zf           Fold text highlighted in visual mode
+" zo           Open folded text (put cursor on folded text)
+" za           Toggle (open/close) a fold
+" zc           Close back folded text
+" zj           Moves cursor to the next fold
+" zk           Moves cursor to the previous fold
+" zd           Delete fold at the cursor
+" zR           Open *all* folds
+" zM           Close *all* folds
+
+
+                                • String Search
+                                ----------------
+
+" ^ $ . * [ / < >  Special characters
+" Use \ before the character to negate special meaning of characters
+" *          To search for the word under the cursor
+" Ctrl-n     To highlight search item using '*' above
+" g*         To search for partial word under cursor
+" /jo[ha]n   To search for 'john' or 'joan' -- /jo[ha]n
+" /\<the     To search 'the', 'theatre' or 'then'
+" /the\>     To search 'the' or 'breathe'
+" /\<the\>   To search only the word 'the'
+" /bob\|joe  To search for 'bob' _or_ 'joe'
+" /\<....\>  To search all 4 letter words
+" /^\n\{3}   To find 3 empty lines
+" /.*fred\&.*joe  To search for 'fred' _and_ 'joe' in any order
+" /\<\d\d\d\d\>   To search for exactly 4 digits
+" /\<\d\d*\>      To search for first 2 digits, then various characters
+" /<!--\_p\{-}--> To search for multiple line comments
+" :bufdo /searchstr/  To search in all open files
+" :%s//replacementstring/g  Place cursor on text you wish to replace, press '*'
+"                           (In the search-replace command above, an empty search
+"                            field defaults to currently active search term.)
+" q/          To display previous search history
+" q:          To display previous command history
+" k           To move up while in search/command history
+" j           To move down while in search/command history
+" /s<tab>     To see all previous search string that that start with an 's'
+"             arrow key>
+
+
+                             • String Substitution
+                             ---------------------
+
+" Substitute all occurrences of oldstring file with newstring and prompt
+" :s/old/new/          Replace first occurance of 'old' with 'new in single line
+" :s/old/new/g         Replace all occurance of 'old' with 'new' globally
+" :%s/old/new/gc       Replace all 'old' with 'new' global w/ confirmation
+" :50,100s/old/new/g   Replace string between lines 50-100
+" :5,$s/old/new/g      Replace string from line 5 to EOF
+" :bufdo %s/foo/bar/g  Replace string in all buffer files
+" :%s/^/hello/g        Replace the beginning of each line by 'hello'
+" :%s/$/Harry/g        Replace the end of each line by 'Harry'
+" :%s/old/new/gi       Replace 'old' with 'new' case insensitive
+" :%s//new/g           Replace previously search 'text' denoted by // with 'new'
+" :%s/*$//g            Delete all white spaces
+" :g/string/d          Delete all lines containing 'string'
+" :v/string/d          Delete all lines which doesn't contain 'string'
+" :%s/^\(.*\)\n\1/\1$/ Delete duplicate lines
+" :%s/\<old\>/new/gc   \< match word start and \> match end of word
+" :'a,'bs/^/#/         Add '#' at start of block of text from 'a to 'b
+" :%s=\s\+$==          To clear trailing all spaces
+" (% for global, s for substitute, \s for white space, \+ for one/more space,
+" ($ for end of line, = for delimeters, == replace pattern with nothing)
+" guu                  Set to lowercase all string in a line
+" gUU                  Set to uppercase all string in a line
+
+
+                                 • Tab Windows
+                                 -------------
+
+" vi f1 fNth    Open multiple files from the command line
+" vi -p f1 fNth Open multiple files in tab format
+" :tab ball     Display buffer files into tab files
+" :tabnew       Create blank tab
+" :tabe file    Open file in new tab
+" :tabn         Move to next tab
+" :tabp         Move to previous tab
+" :tabfirst     Move to first tab
+" :tablast      Move to last tab
+" gt            Go to next tab file (left to right)
+" gT            Go to previous tab file (right to left)
+" :tabo         Close all other tab page
+
+
+                           • Split Windows (Viewport)
+                           --------------------------
+
+" vi -o file1 file2  Open multiple files in horizontal split mode
+" vi -O file1 file2  Open multiple files in vertical split mode
+" :new               Split a new window, load empty buffer
+" :vnew              Split a new window (vertical), load empty buffer
+" :split file        Open file in separate window
+" :vsplit file       Open file in separate window (vertical)
+" Ctrl-w =           Make windows in equal size
+" Ctrl-w r           Rotate windows between 2 split file
+" Ctrl-w w           Move cursor to between windows
+" Ctrl-w j           Move cursor one viewport down
+" Ctrl-w k           Move cursor one viewport up
+" Ctrl-w l           Move cursor to left viewport
+" Ctrl-w h           Move cursor to right viewport
+" :close             Close a window
+" :only              Close all other files except the current one
+" :ball              Open all file in other windows
+" :qall _or_ :qall!  Quit all windows
+" :wall              Write all changes in various buffers
+" :Sex               Split window horizontally and open file explorer
+" :Vex               Split window vertically and open file explorer
+
+
+                                   • Mappings
+                                   ----------
+
+" Key mapping refers to creating a shortcut for repeating a sequence of keys or
+" commands. You can map keys to execute frequently used key sequences or to
+" invoke an Ex command or to invoke a Vim function or to invoke external
+" commands. Using key maps you can define your own Vim commands.
+" Key mapping is used to change the meaning of typed keys. The most common use
+" is to define a sequence of commands for a function key.
+
+" :mapcommand <key> <command>   Mapping format
+
+" cmap      handles command-line mappings.
+" imap      handles insert-only mappings.
+" map       maps keys in normal, visual, and operator-pending mode.
+" mappings! maps keys in Vim's command and insert modes.
+" nmap      maps keys in normal mode only.
+" omap      maps keys in operator-pending mode only.
+" vmap      maps keys in visual mode only.
+
+
+                            • Running Linux Commands
+                            ------------------------
+
+" :!ls       Run external command like 'ls' inside Vim
+" :.!cal -3  Insert output of the 'cal' command in current cursor position
+" :re! date  Insert output of external command
+" :re!bc     Insert output of bc calculation
+" <Shift> K  Show man page for the word currently under cursor
+" :'a,'b !sort  Sort entire file
+" :sort         Highlight block of text, and sort
+" :!sudo tee %  Permission error when trying to save file owned by root
+" :earlier 15   Revert file to how it was 15 minutes ago
+
+" (use sort! for reverse sorting and 'sort i' for case insensitive sort)
+" To manipulate fields using awk: assuming you have 3 fields and would like to
+" rearrange field order -- :!awk '{print $3 " " $2 " " $1}'
+
+
+
+                             • Miscellaneous Stuff
+                             ---------------------
+
+" set -o vi  Set Bash to use Vi mode
+" :e .       Open file browser explorer
+" :Ve .      Open file browser in vertical split mode
+" :Se .      Open file browser in horizontal split mode
+" Ctrl-A     Increment the number under the cursor
+" Ctrl-X     Decrement the number under the cursor
+" g;         To cycle through recent changes (oldest first)
+" q/         To display previous search history
+" q:         To display previous command history
+" k          To move up while in search/command history
+" j          To move down while in search/command history
+" :changes   To see all the changes
+" :put =''   To add blank line above/below w/o entering insert mode
+" :put! =''  To add blank line above/below w/o entering insert mode
+" O          Add blank line above the current cursor
+" o          Add blank line below the current cursor
+" g CTRL-g   To check word/line count
+" ga         Show ASCII value of character under cursor
+" :s <arrow key>     To see previous commands that with an 's'
+" :!cp % %.bak       Create backup of the current file to backup
+" :set cursorcolumn  To highlight the current column (teaching aid)
+" :set cursorline    To highlight the current line   (teaching aid)
+"
+" To count words in the file -- g<Ctrl-g>
+" To run calculations in bc -- !bc
+" To calculate arithmetic equation: highlight text in visual mode, go to Command
+"    mode and add !bc (equation will be replace with result)
+" To use vim as calculator: Go to insert-mode, press Ctrl-R followed by '=',
+"    type calculations (ex 2+4), press enter.
+
+
+" To remove the abbreviation defined by abbreviate_word -- :unab abbreviate_word
+" To change the case of a letter (uppercase to lower or vice versa),
+"		just put the cursor over it and hit ~
+" To find a certain letter on the current line (for example, "h"),
+"		hit fh (find h). To go back, hit Fh.
+" To use macro feature:
+"     1. Start recording by pressing 'q', followed by lower case character (used
+"        as macro name)
+"     2. Perform typical editing.
+"     3. Stop recording by pressing 'q'
+"     4. Play the recorded macro by pressing @ followed by macro name
+" To avoid using abbreviation after the string -- Ctrl-v
+" Vim HOWTO files can be found in /usr/share/vim/vim70/doc, usr_toc.txq
+" To print certain part of the file -- :[range]ha
+" To close multiple buffer --
+    :ls (to see how many buffers are open, ex. 5 buffers)
+    :2,5bd (given range 2,5 - close 2nd to 5th buffer)
+" To show list of files and highlight active file -- :args
+" To move forward (inverse of Ctrl-o) -- ju
+" To move to previous declaration of function call or variable under the cursor
+" -- gd
+" To shift width by 10 the block of text selected by Ctrl-v -- :set sw=10
+"     and then press Shift->
+
+
+GUI mode
+--------
+
+" To find out the current font setting use ":set gfn?" command
+" To open graphical file explorer in gvim -- :browse e
+
+Key mappings in .vimrc/mapping.vim
+-----------------------------------
+" <F4> - To highlight mispelled words
+" <Ctrl-D> - To find next mispelled words
+" Press 's' to view spelling suggestions
+"
+
+
+Compound Searches
+-----------------
+" Compound searches are particularly useful when you are searching through code
+" for the existence of a command that specifically follows another—for example,
+" where a function is called after a particular variable is set.
+
+   Gene is an IT consultant.  Gene likes rock climbing and running.  Gene has
+   work on Linux system for over 5 years.  Gene also worked as instructor for
+   IT courses before that.  Gene lives in Manila.
+
+" To find the first line containing string *rock* followed by 0 or more
+" characters followe by the string *climbing* -- /rock.*climb
+
+" However, this command will only find matches where both strings exist on the
+" same line. If you want to search for the first occurrence of a pattern or
+" string where it follows another regardless of whether both patterns or strings
+" exist on the same line, you can use a compound search by specifying both
+" search commands separated by a semi-colon (;) -- /{Gene}/;/Linux/
+"
+" When searching for patterns to replace within a file, vim can save any
+" patterns that it matches into a buffer, which can then be replayed in
+" substitutions using a buffer reference number.  In the above sample text,
+" to search for lines starting with the word Gene, change it to Mr Gene Ordanza,
+" enter the following -- :%s/^\(Gene\)/Mr \1 Ordanza/gc
+" Where:
+" :%s - instruct vim to perform substitution
+" / - pattern separator
+" ^\(Gene\) - Lines starting with Gene and put it in buffer 1
+" Mr \1 Ordanza - Substitute Gene with Mr \1 Ordanza where \1 is buffer #1.
+" gc = global file and ask confirmation before substituting it.
+
+
+Cookbook Scripts
+----------------
+
+To remove the ^M characters from a MS-DOS file, enter the command:
+
+      :1,$s/{Ctrl+V}{Ctrl+M}//{Enter}
+
+This command starts with a colon (:) to tell Vim to enter ex mode. All ex start
+with a line number range, in this case its from the first line (1) to the last
+($). The slash indicates the start of the "from text". The {Ctrl+V} tells Vim to
+treat the next character as a regular character even if it's a special one. The
+next character is {Ctrl+M}. (This would be treated as {Enter} without
+the {Ctrl+V}.) The next slash ends the "from text". What follows is the "to text"
+enclosed by slashes. In this case it's nothing (//).
+
+ ---
+
+
+C Programming
+-------------
+" Using for generating tags/index of C language objects found in C source and
+" header files.
+
+   :tag <tagname> - position the cursor on tag <tagname> position
+   CTRL-]         - position the cursor on tag under the cursor
+   CTRL-T         - go back after the previous jumps
+   :ptag <tagname> - show tag in the preview window (see :help preview-window)
+   CTRL-W }        - show tag under cursor in preview window
+   CTRL-W z        - close preview window (opened by above 2 commands)
+
+
+
+                                Additional Info
+                                ===============
+
+Special Key Names
+-----------------
+   <Up>     - Up arrow key
+   <Down>   - Down arrow key
+   <Right>  - Right arrow key
+   <Left>   - Left arrow key
+   <Home>   - Home key
+   <BS>     - BackSpace
+   <Space>  - Space key
+   <Tab>    - Tab
+   <C-char> - Ctrl + char
+   <S-char> - Shift + char
+   <C/S-@>  - Ctrl/Shift + Space (exception)
+
+
+Important Keywords
+------------------
+
+  %         current file name
+  %<        current file name without extension
+  <cword>   word under the cursor
+  <cWORD>   WORD under the cursor
+  <cfile>   path name under the cursor
+  <cfile><  idem, without extension
+  <Leader>  set using mapleader, / by default
+
+
+What is the difference bet. remap, noremap, nnoremap and vnoremap commands
+--------------------------------------------------------------------------
+
+    - remap is an option that makes mappings work recursively. By default it
+      is on and I'd recommend you leave it that way.
+    - map and :noremap are recursive and non-recursive versions of the various
+      mapping commands.
+
+Syntax highlighting for unrecognized file extensions
+----------------------------------------------------
+
+  - If I wish to set files with *.ejs extensions to use HTML bindings/syntax
+
+    au BufNewFile,BufRead *.ejs set filetype=html
+
+
+                              • Macro Application
+                              -------------------
+
+" : 5@a         To run the macro above 5 times -- 5@a
+" Convert anonymous function to ES6 arrow function
+
+  var greeterFunc = function (name) {
+    return console.log (`Hello`, name)
+  }
+
+  var byeFunc => function (name) {
+    return console.log (`Goodbye`, name)
+  }
+
+" qa        Start macro recording on register 'a'
+" 0         Move cursor to beginning of line
+" :s/var/const/g  Replace 'var' with 'const'
+" :s/function//g  Replace 'var' with single blank character
+" 0         Move cursor to beginning of line
+" %         Move cursor to char )
+" a         Enter 'insert' mode
+" <space> and type '=>'
+" <Esc>0    Revert to Normal mode, go go beginning of line
+" q         Stop macro recording
+"
+" :g/function/normal @a  Run macro 'a' on all 'function' keyword
+
+  ---
+
+" Increment value of number
+
+  1.
+
+" qa        Start macro recording on register 'a'
+" 0         Move cursor to beginning of line
+" yyp       Copy current line below
+" Ctrl-a    Increment value
+" q         Stop macro recording
+" 5@a       Run macro 'a' 5x
+
+  ---
+
+" Formatting disorganized tabular data
+
+ Stallman  Richard GNU 1953  USA
+ Wall  Larry   Perl  1954  USA
+ Moolenar  Bram  Vim 1961  Netherlands
+ Tridgell  Andrew  Samba  1967  Australia
+ Matsumoto  Yukihiro  Ruby  1965  Japan
+ Ritchie  Dennis  C  1941  USA
+ Thompson  Ken  Unix  1943  USA
+
+" Set 'a for start of table and 'b for end of table
+" 'a,'b!column -t       Format disorganized data
+" 'a,'b!sort -k1        Sort by surname (field 1)
+
+
+                        • VimScript Programming Language
+                        --------------------------------
+
+Spell Checking and Dictionary
+-----------------------------
+" To enable/disable spell checking -- :set spell _or_ nospell
+" To enable/disable spell checking -- :set spell!
+" To move to the next mispelled -- ]s
+" To move to the previous mispelled -- [s
+" To add a word to the dictionary -- zg
+" To undo the addition of a word to the dictionary -- zug
+" To view spelling suggestions for mispelled word -- z=
+" To see spell documentation -- :help spell
+" To use aspell package -- :! aspell -c %
+" To autocomplete a word already in the buffer -- Ctrl-n
+"
+" To load a dictionary file in Vim, add the following setting:
+" :set dictionary+=/usr/share/dict/words
+" Note: make sure that 'words' package is installed
+" To use the words in dictionary, press ctrl-x ctrl-k
+"
+" Other completion types available in Vim. Ctrl-x plus:
+" Ctrl-l    Complete whole lines of text
+" Ctrl-n    Complete words from current buffer
+" Ctrl-k    Complete words from dictionaries
+" Ctrl-t    Complete words from thesaurus (:help thesaurus)
+" Ctrl-i    Words from current and included files
+" Ctrl-o    Omni-completion
+" s         Spelling suggestions
+" Note: You need to press <F4> to enable spelling suggestions.  <F4> is a mapped
+" key in mappings.vim.  Also, to cycle through different suggestions (ie.
+" dictionaries) you can keep pressing Ctrl-k/n/o/key.
+
